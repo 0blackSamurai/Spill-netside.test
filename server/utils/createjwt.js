@@ -4,7 +4,7 @@ require("dotenv").config();
 
 function createjwt (email, role) {
     
-    const jwttoken = jwt.sign({ role }, process.env.SecretJWT);
+    const jwttoken = jwt.sign({ role, email }, process.env.SecretJWT);
     console.log(jwttoken,  "JWT TOKEN")
 
     return jwttoken;

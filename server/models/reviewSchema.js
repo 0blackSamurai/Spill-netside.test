@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const{model, Schema} = mongoose;
 
-const rewviewSchema = new Schema ({
+const reviewSchema = new Schema ({
     user:{type:mongoose.Schema.Types.ObjectId, ref:"user", required: true},
     game: {
         type: mongoose.Schema.Types.ObjectId,
@@ -17,6 +17,6 @@ const rewviewSchema = new Schema ({
     }
 })
 
-const rewview = model("rewview", rewviewSchema);
+const review = model("review", reviewSchema);
 
-module.exports = rewview
+module.exports = review

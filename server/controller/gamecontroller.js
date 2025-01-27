@@ -2,32 +2,46 @@ const Game = require("../models/gameSchema.js");
 
 const gamecontroller = {
     getAllGames: (async(req, res) => {
-        const games = await Game.find();
-        if(games.length>0){
+
+        try {
             
-            res.status(200).send({msg:"games found", games: games})
-        }else {
-            res.status(404).send({msg: "No games found"})
+            const games = await Game.find();
+            if(games.length>0){
+                
+                res.status(200).send({msg:"games found", games: games})
+            }else {
+                res.status(404).send({msg: "No games found"})
+            }
+        } catch (error) {
+            console.log(error)
+            res.status(500).send({msg: "something went wrong"})
         }
+
     }),
     createGame: (async(req, res) => {
         const{title, price, publisher, releaseDate, status, description, shortDescritons} = req.body;
 
-        const game = new Game({
-            title, 
-            price, 
-            publisher, 
-            releaseDate, 
-            status, 
-            description, 
-            shortDescritons,
-        })
-        let result = await game.save();
-        console.log(result);
-        if(result.id){
-            res.status(200).send({msg: "Game created", game: game})
-        } else {
+        try {
             
+            const game = new Game({
+                title, 
+                price, 
+                publisher, 
+                releaseDate, 
+                status, 
+                description, 
+                shortDescritons,
+            })
+            let result = await game.save();
+            console.log(result);
+            if(result.id){
+                res.status(200).send({msg: "Game created", game: game})
+            } else {
+                
+                res.status(500).send({msg: "something went wrong"})
+            }
+        } catch (error) {
+            console.log(error)
             res.status(500).send({msg: "something went wrong"})
         }
     }),
@@ -49,19 +63,32 @@ const gamecontroller = {
     getGame: (async(req, res) => {
         const {id} = req.params;
 
-        const game = await Game.findById(id);
+        try {
+            const game = await Game.findById(id);
+    
+            console.log(game)
+    
+            res.status(200).send({msg: "Game founded", game: game})
+            
+        } catch (error) {
+            console.log(error)
+            res.status(500).send({msg: "something went wrong"})   
+        }
 
-        console.log(game)
-
-        res.status(200).send({msg: "Game founded", game: game})
         
     }),
     deleteGame: (async(req, res) => {
         const {id} = req.params;
-
-        const game = await Game.findByIdAndDelete(id);
-        console.log(game);
-        res.status(200).send({msg: "Game deleted", game: game})
+        
+        try {
+            const game = await Game.findByIdAndDelete(id);
+            console.log(game);
+            res.status(200).send({msg: "Game deleted", game: game})
+            
+        } catch (error) {
+            console.log(error)
+            res.status(500).send({msg: "something went wrong"})
+        }
     }),
 
 

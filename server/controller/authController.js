@@ -10,6 +10,7 @@ const authController = {
       const { email, password } = req.body;
       console.log(email);
 
+      
       const user = await User.findOne({ email: email });
       if (!user) {
         return res.status(404).send({ msg: "User not found" });
@@ -21,7 +22,7 @@ const authController = {
       if (isPassword) {
         let role = "user";
        const jwttoken = createjwt(email, role);
-        createCookie(res, jwttoken);
+       await createCookie(res, jwttoken);
         res.status(202).send({ msg: "Successful login", user: user });
       } else {
         res.status(401).send({ msg: "Invalid email or password" });
@@ -47,7 +48,7 @@ const authController = {
         password: hashedPassword,
       });
      const jwttoken = createjwt(email, role);
-     createCookie(res, jwttoken);
+     await createCookie(res, jwttoken);
 
       console.log(user);
       await user.save();
