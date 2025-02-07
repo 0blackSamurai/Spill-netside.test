@@ -12,7 +12,7 @@ const reviewroutes = require("./routes/reviewroutes.js");
 const app = express();
 
 let corsOption = {
-    origin: "http://localhost:3000",
+    origin: process.env.CORESORIGIN,
     methods: "GET,PUT,POST,DELETE",
     credentials:true,
 }
