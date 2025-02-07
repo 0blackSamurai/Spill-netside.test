@@ -13,11 +13,14 @@ const app = express();
 
 
 
-
 let corsOption = {
     origin: function (origin, callback) {
-        // Get the allowed origins from the environment
-        const allowedOrigins = process.env.CORSORIGINS.split(',');
+        // Manually specify the allowed origins
+        const allowedOrigins = [
+            "http://10.12.44.82",
+            "http://localhost:3000",
+            "http://gameify.hyena.ikt-fag.no"
+        ];
 
         if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
             // Allow the origin if it's in the allowedOrigins array
