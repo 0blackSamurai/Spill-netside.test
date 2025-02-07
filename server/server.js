@@ -13,13 +13,26 @@ const app = express();
 
 
 
+
 let corsOption = {
-    origin: process.env.CORSORIGIN, // Fixed typo here
+    origin: function (origin, callback) {
+        // Get the allowed origins from the environment
+        const allowedOrigins = process.env.CORSORIGINS.split(',');
+
+        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+            // Allow the origin if it's in the allowedOrigins array
+            callback(null, true);
+        } else {
+            // Reject the request if origin is not allowed
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     methods: "GET,PUT,POST,DELETE",
     credentials: true,
 };
 
 app.use(cors(corsOption));
+
 
 app.use(cookieParser());
 
