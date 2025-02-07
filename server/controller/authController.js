@@ -5,23 +5,36 @@ const jwt = require("jsonwebtoken");
 const createjwt = require("../utils/createjwt.js")
 const createCookie = require("../utils/createcookie.js")
 const authController = {
-  login: async (req, res) => {
-    try {
-      const { email, password } = req.body;
+    user:((req,res)=>{
+        console.log(req.user, "USER");
+        try {
+            const user = User.findOne({email: req.user.email})
+            if(user){
+                res.status(200).send({msg: "User founded", user: user})
+            }
+        }catch (error) {
+            console.log(error)
+            res.status(500).send({msg: "something went wrong"})
+        }
+    }),
+    login: async (req, res) => {
+        try {
+            const { email, password } = req.body;
       console.log(email);
-
+      
       
       const user = await User.findOne({ email: email });
+      
       if (!user) {
         return res.status(404).send({ msg: "User not found" });
       }
 
       const isPassword = await bcrypt.compare(password, user.password);
       console.log(isPassword);
-
+      
       if (isPassword) {
-        let role = "user";
-       const jwttoken = createjwt(email, role);
+          let role = "user";
+          const jwttoken = await createjwt(email, role);
        await createCookie(res, jwttoken);
         res.status(202).send({ msg: "Successful login", user: user });
       } else {
@@ -37,17 +50,19 @@ const authController = {
     try {
       const { email, password, repeatPassword } = req.body;
       const role = "user";
+      
 
       if (password !== repeatPassword) {
         return res.status(400).send({ msg: "Passwords do not match" });
       }
-
+      console.log(req.body)
       const hashedPassword = await bcrypt.hash(password, saltrounds);
       const user = new User({
         email: email,
         password: hashedPassword,
       });
-     const jwttoken = createjwt(email, role);
+      console.log(req.body)
+     const jwttoken =await createjwt(email, role);
      await createCookie(res, jwttoken);
 
       console.log(user);

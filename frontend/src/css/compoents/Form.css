@@ -1,0 +1,32 @@
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 40%;
+    gap: 10px;
+    width: 600px;
+    
+}
+
+.login {
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.register {
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+input {
+    padding: 10px, 0px;
+    border-radius: 4px;
+    font-size: 1.2rem;
+}
+button {
+    padding: 10px, 0px;
+    background-color: var(--color-black);
+    border-radius: 4px;
+    color: var(--color-white);
+}
