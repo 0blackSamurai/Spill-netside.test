@@ -12,27 +12,25 @@ const reviewroutes = require("./routes/reviewroutes.js");
 const app = express();
 
 
-
 let corsOption = {
-    origin: function (origin, callback) {
-        // Manually specify the allowed origins
-        const allowedOrigins = [
-            "http://10.12.44.82",
-            "http://localhost:3000",
-            "http://gameify.hyena.ikt-fag.no"
-        ];
+  origin: function (origin, callback) {
+      const allowedOrigins = [
+          "http://10.12.44.82",
+          "http://localhost:3000",
+          "http://gameify.hyena.ikt-fag.no"
+      ];
 
-        if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
-            // Allow the origin if it's in the allowedOrigins array
-            callback(null, true);
-        } else {
-            // Reject the request if origin is not allowed
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    methods: "GET,PUT,POST,DELETE",
-    credentials: true,
+      if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+          callback(null, true);
+      } else {
+          callback(new Error('Not allowed by CORS'));
+      }
+  },
+  methods: "GET,PUT,POST,DELETE,OPTIONS", // Ensure OPTIONS is included in allowed methods
+  allowedHeaders: "Content-Type", // Allow 'Content-Type' header (since it's part of your request)
+  credentials: true,
 };
+app.options('*', cors(corsOption));
 
 app.use(cors(corsOption));
 
