@@ -3,9 +3,12 @@ require("dotenv").config();
 const User = require("../models/userschema.js");
 
 async function verifytoken(req, res, next) {
-    const jsonwebtoken = req.cookies.jwt;
+    try {
 
+        const jsonwebtoken = req.cookies.jwt;
+        
     await jwt.verify(jsonwebtoken, process.env.SECRETJWT,(async(err, decoded) => {
+        
         if(err){
             
             console.log(err)
@@ -32,7 +35,11 @@ async function verifytoken(req, res, next) {
         console.log(next);
     
     })
-
+    
+}catch (error){
+    console.log(error)
+    return res.status(500).send({msg:"help me"})
+}
 };
 
 module.exports = verifytoken;
