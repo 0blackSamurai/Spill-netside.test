@@ -11,12 +11,16 @@ const reviewroutes = require("./routes/reviewroutes.js");
 
 const app = express();
 
+
+
 let corsOption = {
-    origin: process.env.CORESORIGIN,
+    origin: process.env.CORSORIGIN, // Fixed typo here
     methods: "GET,PUT,POST,DELETE",
-    credentials:true,
-}
+    credentials: true,
+};
+
 app.use(cors(corsOption));
+
 app.use(cookieParser());
 
 mongoose.connect(process.env.DB_URL);
