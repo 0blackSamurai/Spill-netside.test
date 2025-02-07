@@ -34,7 +34,14 @@ app.use(cors(corsOption));  // Apply CORS middleware
 
 app.use(cookieParser());
 
-mongoose.connect(process.env.DB_URL);
+mongoose.connect(process.env.DB_URL)
+  .then(() => {
+    console.log("Successfully connected to the database");
+  })
+  .catch((err) => {
+    console.error("Error connecting to the database:", err);
+  });
+
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
