@@ -11,7 +11,6 @@ const reviewroutes = require("./routes/reviewroutes.js");
 
 const app = express();
 
-
 let corsOption = {
   origin: function (origin, callback) {
       const allowedOrigins = [
@@ -27,13 +26,11 @@ let corsOption = {
       }
   },
   methods: "GET,PUT,POST,DELETE,OPTIONS", // Ensure OPTIONS is included in allowed methods
-  allowedHeaders: "Content-Type", // Allow 'Content-Type' header (since it's part of your request)
+  allowedHeaders: ["Content-Type", "Authorization"], // Allow 'Content-Type' and 'Authorization' headers
   credentials: true,
 };
-app.options('*', cors(corsOption));
 
-app.use(cors(corsOption));
-
+app.use(cors(corsOption));  // Apply CORS middleware
 
 app.use(cookieParser());
 
@@ -51,4 +48,6 @@ app.get("/", (req, res) => {
   res.send("Halla");
 });
 
-app.listen(process.env.PORT);
+app.listen(process.env.PORT, () => {
+  console.log(`Server is running on port ${process.env.PORT}`);
+});
