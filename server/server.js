@@ -16,7 +16,7 @@ let corsOption = {
       const allowedOrigins = [
           "http://10.12.44.82",
           "http://localhost:3000",
-          "http://gameify.hyena.ikt-fag.no"
+          "http://gameify-frontend.server.hyena.ikt-fag.no"
       ];
 
       if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
