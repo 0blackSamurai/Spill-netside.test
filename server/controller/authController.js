@@ -2,26 +2,31 @@ const User = require("../models/userschema.js");
 const bcrypt = require("bcrypt");
 const saltrounds = parseInt(process.env.SALTROUNDS);
 const jwt = require("jsonwebtoken");
-const createjwt = require("../utils/createjwt.js")
-const createCookie = require("../utils/createcookie.js")
+const createjwt = require("../utils/createjwt.js");
+const createCookie = require("../utils/createcookie.js");
+
 const authController = {
-    user:((req,res)=>{
-        console.log(req.user, "USER");
-        try {
-            const user = User.findOne({email: req.user.email})
-            if(user){
-                res.status(200).send({msg: "User founded", user: user})
-            }
-        }catch (error) {
-            console.log(error)
-            res.status(500).send({msg: "something went wrong"})
-        }
-    }),
-    login: async (req, res) => {
-        try {
-            const { email, password } = req.body;
-      console.log(email);
+  user: async (req, res) => {
+    console.log(req.user, "USER");
+    try {
+      const user = await User.findOne({email: req.user.email})
+        .select('email name role age adr');
       
+      if(user){
+        res.status(200).send({msg: "User found", user: user.toObject()});
+      } else {
+        res.status(404).send({msg: "User not found"});
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({msg: "Something went wrong"});
+    }
+  },
+  
+  login: async (req, res) => {
+    try {
+      const { email, password } = req.body;
+      console.log(email);
       
       const user = await User.findOne({ email: email });
       
@@ -33,9 +38,9 @@ const authController = {
       console.log(isPassword);
       
       if (isPassword) {
-          let role = "user";
-          const jwttoken = await createjwt(email, role);
-       await createCookie(res, jwttoken);
+        let role = "user";
+        const jwttoken = await createjwt(email, role);
+        await createCookie(res, jwttoken);
         res.status(202).send({ msg: "Successful login", user: user });
       } else {
         res.status(401).send({ msg: "Invalid email or password" });
@@ -45,34 +50,41 @@ const authController = {
       res.status(500).send({ msg: "An error occurred during login" });
     }
   },
+  logout : (req, res) => {
+    res.clearCookie('user');
+    res.redirect("/login");
+},
 
-  register: async (req, res) => {
+register: async (req, res) => {
     try {
       const { email, password, repeatPassword } = req.body;
       const role = "user";
       
-
+      // Check if user already exists
+      const existingUser = await User.findOne({ email: email });
+      if (existingUser) {
+        return res.status(400).send({ msg: "Email already in use" });
+      }
+      
       if (password !== repeatPassword) {
         return res.status(400).send({ msg: "Passwords do not match" });
       }
-      console.log(req.body)
+      
       const hashedPassword = await bcrypt.hash(password, saltrounds);
       const user = new User({
         email: email,
         password: hashedPassword,
       });
-      console.log(req.body)
-     const jwttoken =await createjwt(email, role);
-     await createCookie(res, jwttoken);
+      
+      const jwttoken = await createjwt(email, role);
+      await createCookie(res, jwttoken);
 
-      console.log(user);
       await user.save();
       
-
-    //   const role = "user";
-      
-
-      res.status(201).send({ msg: "Successful signup", user: user });
+      res.status(201).send({ msg: "Successful signup", user: {
+        email: user.email,
+        _id: user._id
+      }});
     } catch (error) {
       console.error(error);
       res.status(500).send({ msg: "An error occurred during signup" });
