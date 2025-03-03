@@ -7,22 +7,25 @@ const createCookie = require("../utils/createcookie.js");
 
 const authController = {
   user: async (req, res) => {
-    console.log(req.user, "USER");
     try {
-      const user = await User.findOne({email: req.user.email})
-        .select('email name role age adr');
-      
-      if(user){
-        res.status(200).send({msg: "User found", user: user.toObject()});
-      } else {
-        res.status(404).send({msg: "User not found"});
-      }
+        // Validate that req.user exists (set by your verifytoken middleware)
+        if (!req.user || !req.user.email) {
+            return res.status(401).send({ msg: "Unauthorized" });
+        }
+
+        const user = await User.findOne({ email: req.user.email })
+            .select('email name role age adr');
+        
+        if (!user) {
+            return res.status(404).send({ msg: "User not found" });
+        }
+        
+        res.status(200).send({ msg: "User found", user: user.toObject() });
     } catch (error) {
-      console.log(error);
-      res.status(500).send({msg: "Something went wrong"});
+        console.log(error);
+        res.status(500).send({ msg: "Something went wrong" });
     }
-  },
-  
+},
   login: async (req, res) => {
     try {
       const { email, password } = req.body;
@@ -50,11 +53,7 @@ const authController = {
       res.status(500).send({ msg: "An error occurred during login" });
     }
   },
-  logout : (req, res) => {
-    res.clearCookie('user');
-    res.redirect("/login");
-},
-
+  
 register: async (req, res) => {
     try {
       const { email, password, repeatPassword } = req.body;
