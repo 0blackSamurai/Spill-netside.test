@@ -54,8 +54,8 @@ export default function Register() {
             <h1>Register</h1>
             <form onSubmit={handleSubmit}>
                 <input 
-                    type="text" 
-                    placeholder="Username/Email" 
+                    type="email" 
+                    placeholder="Email" 
                     onChange={(e) => setEmail(e.target.value)} 
                     value={email}
                 />

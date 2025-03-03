@@ -4,19 +4,21 @@ import { AuthContext } from '../auth/Authcontext';
 import axios from 'axios';
 
 export default function Profile() {
-    const { user, loading, setUser } = useContext(AuthContext);
+    const { user, loading, setUser, logout } = useContext(AuthContext);
     const navigate = useNavigate();
 
-    // Redirect to login if user is not authenticated
     useEffect(() => {
         if (!loading && !user) {
             navigate("/login");
         }
     }, [loading, user, navigate]);
 
-    
+    const handleLogout = async () => {
+        await logout();
+        navigate("/login");
+    };
 
-    // Show loading state while checking authentication
+
     if (loading) {
         return <div>
             <h1>Loading...</h1>
@@ -25,11 +27,11 @@ export default function Profile() {
 
     return (
         <div>
-            <h1>Profile Page</h1>
+            <h1>Welcome, {user.email}</h1>
             {user && (
                 <div>
-                    <p>Welcome, {user.email}</p>
-                    
+                    <p></p>
+                    <button onClick={handleLogout}>Logout</button>
                 </div>
             )}
         </div>

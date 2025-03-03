@@ -30,9 +30,7 @@ export default function Login() {
         .then((response) => {
             console.log(response.data, "response");
             setMsg(response.data.msg);
-            // Update user context with the logged in user
             setUser(response.data.user);
-            // Navigate to profile
             navigate("/profile");
         })
         .catch((error) => {
@@ -41,7 +39,6 @@ export default function Login() {
         });
     }
     
-    // Don't render anything while checking authentication
     if (loading) {
         return <div className="login">
             <h1>Loading...</h1>
@@ -53,8 +50,8 @@ export default function Login() {
             <h1>Logg inn</h1>
             <form onSubmit={handleSubmit}>
                 <input 
-                    type="text" 
-                    placeholder="Username/Email" 
+                    type="email" 
+                    placeholder="Email" 
                     onChange={(e) => setEmail(e.target.value)}
                     value={email}
                 />

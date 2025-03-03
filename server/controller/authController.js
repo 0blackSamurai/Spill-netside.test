@@ -53,6 +53,16 @@ const authController = {
       res.status(500).send({ msg: "An error occurred during login" });
     }
   },
+  logout: async (req, res) => {
+    try {
+      // Clear the JWT cookie
+      res.clearCookie('jwt');
+      res.status(200).send({ msg: "Successfully logged out" });
+    } catch (error) {
+      console.error("Logout error:", error);
+      res.status(500).send({ msg: "An error occurred during logout" });
+    }
+  },
   
 register: async (req, res) => {
     try {

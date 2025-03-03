@@ -25,7 +25,7 @@ const AuthProvider = ({ children }) => {
                 console.log("Auth check error:", error);
                 setUser(null);
             } finally {
-                // Set loading to false regardless of outcome
+            
                 setLoading(false);
             }
         };
@@ -34,16 +34,19 @@ const AuthProvider = ({ children }) => {
     }, []);
 
     const logout = async () => {
-        try {
-            await axios.get(
-                `${process.env.REACT_APP_BACKEND_URL}/auth/logout`, 
-                { withCredentials: true }
-            );
-            setUser(null);
-        } catch (error) {
-            console.log("Logout error:", error);
-        }
-    };
+      try {
+          const response = await axios.get(
+              `${process.env.REACT_APP_BACKEND_URL}/auth/logout`, 
+              { withCredentials: true }
+          );
+          console.log("Logout response:", response.data);
+          setUser(null);
+          return true;
+      } catch (error) {
+          console.error("Logout error:", error);
+          return false;
+      }
+  };
 
     return (
         <AuthContext.Provider value={{ user, loading, setUser, logout }}>
